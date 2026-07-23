@@ -55,13 +55,36 @@ Without a key the app still runs end to end — suggestions come from a rule eng
 PYTHONPATH=. pytest -q
 ```
 
-Eleven tests cover section parsing, substring-collision guards, implied-skill credit, and score calibration at both ends of the range. The calibration tests are the useful ones — they caught a scoring bug where a resume containing every required skill only scored 57%.
+Twenty-six tests cover section parsing, substring-collision guards, implied-skill credit, score calibration at both ends of the range, and the auth rules below. The calibration tests are the useful ones — they caught a scoring bug where a resume containing every required skill only scored 57%.
+
+## Accounts (optional)
+
+Sign-in is deliberately optional. The analyzer works fully as a guest — a demo
+that demands a signup before showing anything is a demo nobody runs. Creating an
+account adds one thing: saved history, so you can see whether an edit actually
+moved your score.
+
+Passwords use PBKDF2-HMAC-SHA256 with a per-user random salt at 600,000
+iterations (OWASP's 2023 floor), compared with `hmac.compare_digest` to avoid
+leaking timing information. Sign-in returns the same error for an unknown email
+and a wrong password, so the form can't be used to enumerate accounts.
+
+History records scores and skill names only — never resume text. Anyone reading
+the JSON store learns which skills a posting asked for, not what was in a CV.
+
+**This is not production auth.** Accounts live in a JSON file, there are no
+sessions beyond Streamlit's in-memory state, no email verification, no rate
+limiting, and no password reset. On Streamlit Cloud the filesystem is ephemeral,
+so accounts reset when the app restarts. Real deployment needs a database and a
+managed identity provider.
 
 ## Project layout
 
 ```
 app.py                 Streamlit UI
 core/
+  auth.py              PBKDF2 password hashing, account store
+  history.py           Per-user saved analyses
   parser.py            PDF text extraction, section splitting
   extractor.py         spaCy PhraseMatcher, regex fallback
   skills_db.py         ~60 skills with aliases + implication map
@@ -69,6 +92,7 @@ core/
   suggestions.py       Gemini client with rule-based fallback
   report.py            PDF report generation (reportlab)
 tests/test_core.py
+tests/test_auth.py
 ```
 
 ## Engineering notes

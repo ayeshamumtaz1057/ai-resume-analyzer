@@ -1,7 +1,11 @@
 streamlit>=1.36
 pypdf>=4.2
-spacy>=3.7
+spacy==3.7.5
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
 scikit-learn>=1.4
 reportlab>=4.1
 python-dotenv>=1.0
 google-genai>=0.3
+
+# Development only — needed to run the test suite.
+pytest>=8.0

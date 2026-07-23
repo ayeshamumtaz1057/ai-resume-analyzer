@@ -80,3 +80,17 @@ def test_verdict_bands(score, word):
     result = analyse(make(), JD)
     result.overall = score
     assert result.verdict.startswith(word)
+
+
+def test_decorated_headings_are_matched():
+    """Real resumes write 'FEATURED PROJECTS', not 'Projects'."""
+    text = "FEATURED PROJECTS\nBuilt a scraper.\n\nRELEVANT WORK EXPERIENCE\nInterned at Acme.\n"
+    sections = split_sections(text)
+    assert "projects" in sections
+    assert "experience" in sections
+
+
+def test_body_text_is_not_mistaken_for_heading():
+    text = "Summary\nI have strong skills in data analysis and modern engineering practice.\n"
+    sections = split_sections(text)
+    assert "skills" not in sections

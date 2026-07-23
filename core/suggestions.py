@@ -13,7 +13,10 @@ import textwrap
 
 from .scorer import Analysis
 
-MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+# Google retires model IDs on a schedule (2.0 Flash was shut down 1 Jun 2026 and
+# now 404s), so we try current models in order rather than pinning one that will
+# silently die months after this repo was last touched.
+MODEL_CANDIDATES = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite"]
 
 PROMPT = textwrap.dedent(
     """
@@ -71,29 +74,53 @@ def _fallback(analysis: Analysis) -> list[str]:
 
 
 def generate(analysis: Analysis, resume_text: str, job_description: str) -> tuple[list[str], str]:
-    """Return (suggestions, source) where source is 'gemini' or 'rules'."""
+    """Return (suggestions, source).
+
+    `source` is "gemini" on success, otherwise a short reason the caller can
+    show the user — a silent fallback is indistinguishable from a bug.
+    """
     key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
     if not key:
-        return _fallback(analysis), "rules"
+        return _fallback(analysis), "no API key set"
 
     try:
         from google import genai
+    except ImportError:
+        return _fallback(analysis), "google-genai not installed"
 
-        client = genai.Client(api_key=key)
-        prompt = PROMPT.format(
-            jd=job_description[:6000],
-            resume=resume_text[:12000],
-            missing=", ".join(s.name for s in analysis.missing) or "none",
-            matched=", ".join(s.name for s in analysis.matched) or "none",
-        )
-        response = client.models.generate_content(model=MODEL, contents=prompt)
-        raw = (response.text or "").strip().removeprefix("```json").removeprefix("```").removesuffix("```")
-        items = json.loads(raw)
-        cleaned = [str(i).strip() for i in items if str(i).strip()]
-        if cleaned:
-            return cleaned[:7], "gemini"
-    except Exception:
-        # Network down, quota hit, bad key, malformed JSON — degrade quietly.
-        pass
+    prompt = PROMPT.format(
+        jd=job_description[:6000],
+        resume=resume_text[:12000],
+        missing=", ".join(s.name for s in analysis.missing) or "none",
+        matched=", ".join(s.name for s in analysis.matched) or "none",
+    )
 
-    return _fallback(analysis), "rules"
+    models = [os.getenv("GEMINI_MODEL")] if os.getenv("GEMINI_MODEL") else MODEL_CANDIDATES
+    last_error = "unknown error"
+
+    for model in models:
+        try:
+            client = genai.Client(api_key=key)
+            response = client.models.generate_content(model=model, contents=prompt)
+            raw = (response.text or "").strip()
+            raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            items = json.loads(raw)
+            cleaned = [str(i).strip() for i in items if str(i).strip()]
+            if cleaned:
+                return cleaned[:7], "gemini"
+            last_error = f"{model} returned nothing usable"
+        except json.JSONDecodeError:
+            last_error = f"{model} returned malformed JSON"
+        except Exception as exc:
+            message = str(exc)
+            # A retired or misspelled model ID 404s — worth trying the next one.
+            if "404" in message or "not found" in message.lower():
+                last_error = f"{model} is unavailable (404)"
+                continue
+            if "401" in message or "API key" in message or "PERMISSION" in message.upper():
+                return _fallback(analysis), "API key rejected"
+            if "429" in message or "quota" in message.lower():
+                return _fallback(analysis), "quota exceeded"
+            last_error = f"{model}: {message[:90]}"
+
+    return _fallback(analysis), last_error

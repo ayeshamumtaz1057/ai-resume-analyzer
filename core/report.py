@@ -75,11 +75,12 @@ def build_report(analysis: Analysis, suggestions: list[str], filename: str, sour
         title="Resume Analysis Report",
     )
     st = _styles()
+    source_label = "Gemini" if source == "gemini" else f"rule engine ({source})"
     story = [
         Paragraph("Resume Analysis Report", st["title"]),
         Paragraph(
             f"{filename} &nbsp;·&nbsp; generated {datetime.now():%d %b %Y, %H:%M} "
-            f"&nbsp;·&nbsp; suggestions by {'Gemini' if source == 'gemini' else 'rule engine'}",
+            f"&nbsp;·&nbsp; suggestions by {source_label}",
             st["sub"],
         ),
         _score_table(analysis),

@@ -6,3 +6,6 @@ venv/
 .DS_Store
 *.pdf
 !assets/*.pdf
+
+# Local account and history store (never commit real user data)
+data/

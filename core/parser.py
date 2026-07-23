@@ -57,14 +57,21 @@ def extract_text(file_bytes: bytes) -> tuple[str, int]:
 
 
 def _match_heading(line: str) -> str | None:
-    """Return the section key if this line looks like a section heading."""
-    cleaned = re.sub(r"[^a-z ]", "", line.lower()).strip()
+    """Return the section key if this line looks like a section heading.
+
+    Real resumes prefix and suffix their headings — "FEATURED PROJECTS",
+    "RELEVANT WORK EXPERIENCE", "TECHNICAL SKILLS & TOOLS" — so we look for the
+    keyword anywhere in the line, on a word boundary. The <=4 word cap keeps
+    body text from being mistaken for a heading.
+    """
+    cleaned = re.sub(r"[^a-z ]", " ", line.lower())
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
     if not cleaned or len(cleaned.split()) > 4:
         return None
-    # Headings are short and usually stand alone on their own line.
     for key, variants in SECTION_PATTERNS.items():
-        if any(cleaned == v or cleaned.startswith(v) for v in variants):
-            return key
+        for v in variants:
+            if re.search(rf"(?<!\w){re.escape(v)}(?!\w)", cleaned):
+                return key
     return None
 
 
