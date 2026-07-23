@@ -9,6 +9,12 @@ from .similarity import compute_similarity
 from .skills import extract_skills, compare_skills, SKILLS_DB
 from .ai_helper import generate_suggestions
 from .ats import compute_ats_score
+from .insights import (
+    experience_match,
+    prioritise_missing,
+    partial_matches,
+    overall_strength,
+)
 from .extras import (
     rewrite_bullets,
     generate_cover_letter,
@@ -34,4 +40,8 @@ __all__ = [
     "estimate_salary",
     "format_salary",
     "build_roadmap",
+    "experience_match",
+    "prioritise_missing",
+    "partial_matches",
+    "overall_strength",
 ]
