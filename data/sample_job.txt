@@ -1,0 +1,26 @@
+Job Title: Junior Machine Learning Engineer
+
+About the Role:
+We are seeking a Junior Machine Learning Engineer to join our AI team. You will
+build, train, and deploy machine learning models that power our data products.
+
+Responsibilities:
+- Develop and evaluate machine learning and deep learning models
+- Work with large datasets using Python, Pandas, and NumPy
+- Build data pipelines and REST APIs using Flask or FastAPI
+- Collaborate with the team using Git and Agile/Scrum practices
+- Deploy models to AWS using Docker
+
+Required Skills:
+- Strong Python programming
+- Experience with machine learning and scikit-learn
+- Familiarity with deep learning frameworks such as TensorFlow or PyTorch
+- Knowledge of NLP or computer vision is a plus
+- SQL and data analysis
+- Git version control
+- Good communication and problem solving skills
+
+Nice to Have:
+- Docker and AWS experience
+- Experience building REST APIs
+- Data visualization with Matplotlib

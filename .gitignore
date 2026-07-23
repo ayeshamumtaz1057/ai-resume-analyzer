@@ -1,11 +1,21 @@
+# Python
 __pycache__/
-*.pyc
-.env
-.venv/
-venv/
-.DS_Store
-*.pdf
-!assets/*.pdf
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
 
-# Local account and history store (never commit real user data)
-data/
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Secrets & config
+.env
+.streamlit/secrets.toml
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

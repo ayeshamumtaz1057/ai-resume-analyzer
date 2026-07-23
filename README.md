@@ -1,111 +1,157 @@
-# AI Resume Analyzer
+# 🧠 AI Resume Analyzer
 
-Upload a resume, paste a job description, get a match score with the reasoning shown — which skills are evidenced, which are missing, and what to fix.
+Upload a resume, paste a job description, and instantly get a **match score**,
+a **skill-gap analysis**, and **AI-powered improvement suggestions** — all
+through a clean Streamlit interface.
 
-Built with Python, Streamlit, spaCy, scikit-learn and the Google Gemini API.
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-FF4B4B)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+> **Live demo:** _add your Streamlit Cloud URL here after deploying_
 
 ---
 
-## Why this exists
+## 📌 Project overview
 
-Most resume checkers return a single number with no explanation. This one shows its work: the score decomposes into three measurable parts, and every skill verdict is traceable to text in your resume.
+AI Resume Analyzer helps job seekers tailor their resume to a specific job.
+It extracts text from a PDF resume, compares it with a job description using
+NLP, highlights which required skills are present or missing, and generates
+practical suggestions to improve the resume.
 
-## How the score is built
+## Features
 
-| Component | Weight | What it measures |
-|---|---|---|
-| Skill coverage | 55% | Of the skills the posting asks for, how many the resume actually evidences |
-| Text similarity | 30% | TF-IDF cosine similarity between resume and posting (1–2 grams, sublinear tf) |
-| Resume quality | 15% | Section completeness, quantified metrics, action verbs, length |
+- **Modern dashboard UI** - metric cards, donut charts, skill bars, dark mode
+- **Sidebar navigation** - Home, Dashboard, Resume Analysis, Reports, Settings
+- **PDF resume upload** and text extraction (PyPDF2)
+- **Text preprocessing** with spaCy (tokenizing + stop-word removal)
+- **Match score** using TF-IDF + cosine similarity (0-100%)
+- **ATS score** - 6 automated checks (contact info, sections, keywords,
+  measurable results, action verbs, length)
+- **Skill detection** - strengths vs. missing skills across 8 categories
+- **AI suggestions** via Google Gemini (rule-based fallback, works free)
+- **AI Tools page** with six extra features:
+  - AI Resume Rewrite (weak bullets to strong, quantified)
+  - ATS Checker (6 automated checks with score ring)
+  - Cover Letter Generator (downloadable)
+  - Interview Q&A Generator (job-specific questions + hints)
+  - Salary Estimator (seniority + role heuristics)
+  - Learning Roadmap (week-by-week plan for missing skills)
+- **Resume preview** with page navigation
+- **Progress animation** during analysis
+- **Downloadable report** (.md)
+- **Responsive** layout
+- **Tested** with pytest (25 tests)
 
-Three details that matter more than the weights:
+## 🧰 Technologies used
 
-**Skills are matched by token, not substring.** A spaCy `PhraseMatcher` handles this, so `R` never matches inside `React` and `Go` never matches inside `Google` — the failure mode that makes naive keyword checkers useless.
+| Purpose            | Tool                          |
+|--------------------|-------------------------------|
+| UI                 | Streamlit                     |
+| PDF parsing        | PyPDF2                        |
+| NLP preprocessing  | spaCy                         |
+| Similarity scoring | scikit-learn (TF-IDF, cosine) |
+| AI suggestions     | Google Gemini (optional)      |
+| Config             | python-dotenv                 |
+| Testing            | pytest                        |
 
-**Repetition signals depth.** Naming a skill once earns 70%; using it across three sections earns 100%. A skills-list keyword and a skill you actually shipped with should not score the same.
+## 🗂️ Folder structure
 
-**Tools imply skills.** Listing PyTorch is real evidence of deep learning even if the phrase never appears. The `IMPLIES` map in `core/skills_db.py` grants partial credit for this, and the UI labels it `implied` — because keyword filters at the other end usually won't make that inference for you.
+```
+ai-resume-analyzer/
+├── app.py                 # Streamlit UI
+├── requirements.txt
+├── README.md
+├── DEPLOYMENT.md
+├── .gitignore
+├── .env.example           # copy to .env and add your Gemini key
+├── .streamlit/config.toml # theme
+├── utils/
+│   ├── __init__.py
+│   ├── pdf_reader.py       # PDF -> text (PyPDF2)
+│   ├── preprocess.py       # cleaning + tokenizing (spaCy)
+│   ├── similarity.py       # TF-IDF cosine similarity
+│   ├── skills.py           # skills DB + detection + gap analysis
+│   └── ai_helper.py        # Gemini suggestions + fallback
+|   └── ats.py              # ATS friendliness scoring
+├── data/
+│   ├── sample_resume.pdf
+│   └── sample_job.txt
+├── assets/
+│   ├── logo.png
+│   └── screenshots/
+└── tests/
+    ├── __init__.py
+    ├── test_preprocess.py
+    ├── test_similarity.py
+    └── test_skills.py
+```
 
-Core technical skills (Python, SQL, cloud, ML) are weighted double against soft skills when the posting asks for them.
-
-## Running it
+## ⚙️ Installation
 
 ```bash
-git clone https://github.com/<you>/ai-resume-analyzer.git
+# 1. Clone
+git clone https://github.com/ayeshamumtaz1057/ai-resume-analyzer.git
 cd ai-resume-analyzer
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+# 2. Virtual environment
+python -m venv venv
+# Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# macOS/Linux:
+# source venv/bin/activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
-python -m spacy download en_core_web_sm
+
+# 4. (Optional) enable Gemini AI suggestions
+copy .env.example .env      # Windows  (macOS/Linux: cp .env.example .env)
+# then open .env and paste your key from https://aistudio.google.com/apikey
+```
+
+> No spaCy model download is needed — the app uses spaCy's blank English
+> pipeline and built-in stop words, so it runs immediately.
+
+## ▶️ Usage
+
+```bash
 streamlit run app.py
 ```
 
-Open http://localhost:8501.
+1. Open http://localhost:8501
+2. Upload `data/sample_resume.pdf` (or your own resume)
+3. Paste the text from `data/sample_job.txt` (or a real job description)
+4. Click **Analyze** to see the score, skill gap, and suggestions
 
-### Gemini API key (optional)
-
-```bash
-cp .env.example .env   # then add your key from https://aistudio.google.com/apikey
-```
-
-Without a key the app still runs end to end — suggestions come from a rule engine that reads the same analysis object. The UI labels which one produced them. This is deliberate: a reviewer cloning the repo gets a working demo on the first try, and a quota error at runtime degrades instead of crashing.
-
-## Running the tests
+## 🧪 Testing
 
 ```bash
-PYTHONPATH=. pytest -q
+pytest -q
 ```
 
-Twenty-six tests cover section parsing, substring-collision guards, implied-skill credit, score calibration at both ends of the range, and the auth rules below. The calibration tests are the useful ones — they caught a scoring bug where a resume containing every required skill only scored 57%.
+## 📸 Screenshots
 
-## Accounts (optional)
-
-Sign-in is deliberately optional. The analyzer works fully as a guest — a demo
-that demands a signup before showing anything is a demo nobody runs. Creating an
-account adds one thing: saved history, so you can see whether an edit actually
-moved your score.
-
-Passwords use PBKDF2-HMAC-SHA256 with a per-user random salt at 600,000
-iterations (OWASP's 2023 floor), compared with `hmac.compare_digest` to avoid
-leaking timing information. Sign-in returns the same error for an unknown email
-and a wrong password, so the form can't be used to enumerate accounts.
-
-History records scores and skill names only — never resume text. Anyone reading
-the JSON store learns which skills a posting asked for, not what was in a CV.
-
-**This is not production auth.** Accounts live in a JSON file, there are no
-sessions beyond Streamlit's in-memory state, no email verification, no rate
-limiting, and no password reset. On Streamlit Cloud the filesystem is ephemeral,
-so accounts reset when the app restarts. Real deployment needs a database and a
-managed identity provider.
-
-## Project layout
+_Add screenshots to `assets/screenshots/` after running the app, then embed
+them here:_
 
 ```
-app.py                 Streamlit UI
-core/
-  auth.py              PBKDF2 password hashing, account store
-  history.py           Per-user saved analyses
-  parser.py            PDF text extraction, section splitting
-  extractor.py         spaCy PhraseMatcher, regex fallback
-  skills_db.py         ~60 skills with aliases + implication map
-  scorer.py            TF-IDF similarity, coverage, quality heuristics
-  suggestions.py       Gemini client with rule-based fallback
-  report.py            PDF report generation (reportlab)
-tests/test_core.py
-tests/test_auth.py
+![Home](assets/screenshots/home.png)
+![Results](assets/screenshots/results.png)
 ```
 
-## Engineering notes
+## 🚀 Deployment
 
-- **Scanned PDFs fail loudly.** If extraction yields under 30 words the app says the file is probably an image export and tells you how to fix it, rather than scoring an empty string as 0%.
-- **spaCy degrades twice.** Missing model falls back to a blank English pipeline; missing spaCy entirely falls back to word-boundary regex. The app never hard-crashes on a fresh environment.
-- **The matcher is built once** and cached with `lru_cache` — compiling ~200 alias patterns on every keystroke would make the UI crawl.
-- **Weights live in one dict** (`WEIGHTS` in `scorer.py`) so the scoring model can be tuned without touching logic.
+Full step-by-step instructions are in [`DEPLOYMENT.md`](DEPLOYMENT.md).
+Quick version: push to GitHub → deploy on
+[Streamlit Community Cloud](https://share.streamlit.io) with main file `app.py`.
 
-## Limitations
+## 🔮 Future improvements
 
-Scores reflect keyword and structure signals, not hiring outcomes. The skill taxonomy is tech-focused and would need extending for other fields. TF-IDF has no semantic understanding — "led a team" and "managed engineers" read as unrelated; sentence embeddings would fix this and are the obvious next step.
+- Swap TF-IDF for semantic embeddings (sentence-transformers)
+- Rank multiple resumes against one job
+- Export a PDF report of the analysis
+- Section-aware parsing (experience, education, projects)
 
-## License
+## 📄 License
 
-MIT
+MIT — free to use, modify, and share.

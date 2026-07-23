@@ -1,16 +1,7 @@
-# Runtime dependencies only. Anything not needed to serve the app belongs in
-# requirements-dev.txt — every extra package here is another way a deploy can fail.
 streamlit>=1.36
-pypdf>=4.2
-scikit-learn>=1.4
-reportlab>=4.1
-python-dotenv>=1.0
-google-genai>=0.3
-
-# spaCy has C extensions, so a pinned version fails to build on a host running a
-# Python release it has no wheel for. Left unpinned deliberately. The trained
-# model is not required: extractor.py falls back to a blank English pipeline,
-# which tokenises well enough for the PhraseMatcher.
-# If a deploy fails on this line, comment it out — extractor.py then falls back
-# to word-boundary regex and the app still runs.
+PyPDF2>=3.0
 spacy>=3.7
+scikit-learn>=1.4
+google-generativeai>=0.8
+python-dotenv>=1.0
+pytest>=8.0
