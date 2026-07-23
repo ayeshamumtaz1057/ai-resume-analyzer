@@ -280,7 +280,7 @@ TXT = "#e8ecf8" if st.session_state.dark else "#0f172a"
 with st.sidebar:
     st.markdown(
         '<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.4rem">'
-        '<svg width="34" height="34" viewBox="0 0 40 40" fill="none"><rect x="6" y="4" width="22" height="30" rx="4" fill="#a78bfa" fill-opacity=".2" stroke="#a78bfa" stroke-width="2"/><line x1="11" y1="12" x2="21" y2="12" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="17" x2="23" y2="17" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="22" x2="18" y2="22" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/><circle cx="27" cy="26" r="8" fill="#0b1020" stroke="#22c55e" stroke-width="2.5"/><line x1="33" y1="32" x2="37" y2="36" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/><path d="M24 26l2.5 2.5L31 24" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        '<svg width="36" height="36" viewBox="0 0 44 44" fill="none"><line x1="22" y1="4" x2="22" y2="10" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round"/><circle cx="22" cy="4" r="2.6" fill="#4ade80"/><rect x="7" y="10" width="30" height="24" rx="8" fill="#8b5cf6" fill-opacity=".18" stroke="#a78bfa" stroke-width="2.2"/><circle cx="16" cy="20" r="3.2" fill="#a78bfa"/><circle cx="28" cy="20" r="3.2" fill="#a78bfa"/><circle cx="17" cy="19" r="1.1" fill="#e8ecf8"/><circle cx="29" cy="19" r="1.1" fill="#e8ecf8"/><path d="M16 27q6 4 12 0" stroke="#4ade80" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="2.5" y="17" width="4" height="10" rx="2" fill="#8b5cf6"/><rect x="37.5" y="17" width="4" height="10" rx="2" fill="#8b5cf6"/></svg>'
         '<div style="font-weight:800;font-size:1.02rem;line-height:1.15">'
         'AI Resume<br>Analyzer</div></div>'
         '<div style="font-size:.76rem;color:#8b95b5;margin-bottom:.9rem">'
@@ -295,14 +295,6 @@ with st.sidebar:
 
     st.divider()
     st.session_state.dark = st.toggle("🌙 Dark mode", value=st.session_state.dark)
-
-    st.markdown(
-        '<div class="strength" style="margin-top:.8rem">'
-        '<div style="font-weight:800;color:#fbbf24;font-size:.86rem">👑 Pro Plan</div>'
-        '<div style="font-size:.75rem;color:#8b95b5;margin:.3rem 0 .6rem 0">'
-        'Upgrade to unlock advanced features</div></div>',
-        unsafe_allow_html=True)
-    st.button("Upgrade Now", key="upg")
 
     st.markdown(
         f'<div class="prof" style="margin-top:.9rem">'
@@ -337,7 +329,7 @@ with h3:
         f'<span class="pill p-info">🔔 {len(st.session_state.history)}</span>'
         f'<div class="prof"><div class="prof-av">{INITIALS}</div><div>'
         f'<div class="prof-n">{USER_NAME}</div>'
-        f'<div class="prof-p">Pro Plan</div></div></div></div>',
+        f'<div class="prof-p">{USER_ROLE}</div></div></div></div>',
         unsafe_allow_html=True)
 
 with st.expander("Profile menu"):
@@ -347,7 +339,7 @@ with st.expander("Profile menu"):
     pc3.markdown(f'<div style="font-size:.82rem">🌙 Theme</div>', unsafe_allow_html=True)
     pc4.markdown(f'<div style="font-size:.82rem">↪ Logout</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="brand">AI RESUME ANALYZER</div>'
+st.markdown('<div class="brand"><svg width="30" height="30" viewBox="0 0 44 44" fill="none" style="vertical-align:-6px;margin-right:8px"><line x1="22" y1="4" x2="22" y2="10" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/><circle cx="22" cy="4" r="2.8" fill="#4ade80"/><rect x="7" y="10" width="30" height="24" rx="8" fill="#8b5cf6" fill-opacity=".2" stroke="#a78bfa" stroke-width="2.4"/><circle cx="16" cy="20" r="3.3" fill="#a78bfa"/><circle cx="28" cy="20" r="3.3" fill="#a78bfa"/><circle cx="17" cy="19" r="1.2" fill="#e8ecf8"/><circle cx="29" cy="19" r="1.2" fill="#e8ecf8"/><path d="M16 27q6 4 12 0" stroke="#4ade80" stroke-width="2.4" stroke-linecap="round" fill="none"/><rect x="2.5" y="17" width="4" height="10" rx="2" fill="#8b5cf6"/><rect x="37.5" y="17" width="4" height="10" rx="2" fill="#8b5cf6"/></svg>AI RESUME ANALYZER</div>'
             '<div class="brand-sub">Get AI-powered insights to improve your '
             'resume and match the perfect job.</div>', unsafe_allow_html=True)
 
