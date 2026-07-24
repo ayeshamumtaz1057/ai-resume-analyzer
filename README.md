@@ -71,9 +71,9 @@ checklist of six things that either passed or didn't.
 
 ## Demo
 
-> **Live app:** _add your Streamlit Cloud URL here after deploying_
+> **Live app:** _https://ai-resume-analyzer-7hydahamgyp79ipcrtyhvl.streamlit.app/_
 >
-> **Video walkthrough:** _add your LinkedIn demo link here_
+> **Video walkthrough:** _https://www.linkedin.com/in/ayesha-mumtaz-82b8913a9/_
 
 ---
 
