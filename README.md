@@ -69,6 +69,7 @@ checklist of six things that either passed or didn't.
 
 ---
 
+
 ## Demo
 
 > **Live app:** _https://ai-resume-analyzer-7hydahamgyp79ipcrtyhvl.streamlit.app/_
