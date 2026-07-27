@@ -39,7 +39,6 @@ features run on rule-based engines by default; adding a Gemini key upgrades them
 without changing a line of code.
 
 ---
-
 ## Overview
 
 Job seekers are told to "tailor your resume to each job" — but nobody tells them
