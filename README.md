@@ -1,4 +1,3 @@
-
 # 🎯 AI Resume Analyzer
 
 **Match any resume to any job in seconds — score it, find the gaps, and fix them**
