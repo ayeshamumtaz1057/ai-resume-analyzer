@@ -18,7 +18,6 @@ dashboard that works with **no API key required**.
 
 [Overview](#overview) · [Demo](#demo) · [Screenshots](#screenshots) · [Features](#features) · [Architecture](#architecture) · [Tech Stack](#tech-stack) · [Scoring Engine](#scoring-engine) · [Getting Started](#getting-started) · [Troubleshooting](#troubleshooting)
 
-
 ---
 
 
