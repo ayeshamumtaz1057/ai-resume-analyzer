@@ -14,7 +14,7 @@
 AI Resume Analyzer takes a PDF resume and a job description, then returns a match
 score, an ATS score, a skill-gap breakdown and rewritten bullet points — plus a
 cover letter, likely interview questions and a learning roadmap, all from one
-dashboard that works with **no API key required**.
+dashboard that works with **no API key required**
 
 [Overview](#overview) · [Demo](#demo) · [Screenshots](#screenshots) · [Features](#features) · [Architecture](#architecture) · [Tech Stack](#tech-stack) · [Scoring Engine](#scoring-engine) · [Getting Started](#getting-started) · [Troubleshooting](#troubleshooting)
 
